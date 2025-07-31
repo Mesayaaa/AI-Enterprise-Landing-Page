@@ -1,163 +1,73 @@
 "use client"
 
-import { useRef, useState, useEffect } from "react"
-import { motion, useMotionValue, useSpring, animate } from "framer-motion"
-import { useTheme } from "next-themes"
+import { motion } from "framer-motion"
+import { useEffect, useState } from "react"
 
 export default function FramerSpotlight() {
-  const [isMounted, setIsMounted] = useState(false)
-  const [isMouseInHero, setIsMouseInHero] = useState(false)
-  const containerRef = useRef<HTMLDivElement>(null)
-  const heroRef = useRef<HTMLElement | null>(null)
-  const defaultPositionRef = useRef({ x: 0, y: 0 })
-  const spotlightRef = useRef<HTMLDivElement>(null)
-  const { resolvedTheme } = useTheme()
-  const isDark = resolvedTheme === "dark"
-
-  // Motion values for the spotlight position with spring physics
-  const mouseX = useMotionValue(0)
-  const mouseY = useMotionValue(0)
-
-  // Add spring physics for smoother movement
-  const springX = useSpring(mouseX, { damping: 20, stiffness: 300 })
-  const springY = useSpring(mouseY, { damping: 20, stiffness: 300 })
-
-  // Define multiple spotlight colors
-  const spotlightColors = [
-    { color: "rgba(36, 101, 237, 0.2)", darkColor: "rgba(36, 101, 237, 0.25)" }, // Blue (primary)
-    { color: "rgba(236, 72, 153, 0.15)", darkColor: "rgba(236, 72, 153, 0.2)" }, // Pink
-    { color: "rgba(16, 185, 129, 0.15)", darkColor: "rgba(16, 185, 129, 0.2)" }, // Green
-  ]
-
-  // Update default position without causing re-renders
-  const updateDefaultPosition = () => {
-    if (heroRef.current) {
-      const heroRect = heroRef.current.getBoundingClientRect()
-      const centerX = heroRect.left + heroRect.width / 2
-      const centerY = heroRect.top + heroRect.height / 3
-
-      defaultPositionRef.current = { x: centerX, y: centerY }
-
-      // Set initial position
-      mouseX.set(centerX)
-      mouseY.set(centerY)
-    }
-  }
-
-  // Handle mouse enter/leave for hero section
-  const handleMouseEnter = () => {
-    setIsMouseInHero(true)
-  }
-
-  const handleMouseLeave = () => {
-    setIsMouseInHero(false)
-
-    // Animate back to default position
-    animate(mouseX, defaultPositionRef.current.x, {
-      duration: 1.2,
-      ease: "easeInOut",
-    })
-
-    animate(mouseY, defaultPositionRef.current.y, {
-      duration: 1.2,
-      ease: "easeInOut",
-    })
-  }
-
-  // Handle mouse movement only when inside hero
-  const handleMouseMove = (e: MouseEvent) => {
-    if (isMouseInHero) {
-      mouseX.set(e.clientX)
-      mouseY.set(e.clientY)
-    }
-  }
-
-  // Setup effect - runs once on mount and cleans up on unmount
-  useEffect(() => {
-    setIsMounted(true)
-
-    // Find the hero section element
-    heroRef.current = document.getElementById("hero")
-
-    // Initial setup
-    updateDefaultPosition()
-
-    // Event listeners
-    window.addEventListener("resize", updateDefaultPosition)
-    window.addEventListener("mousemove", handleMouseMove)
-
-    if (heroRef.current) {
-      heroRef.current.addEventListener("mouseenter", handleMouseEnter)
-      heroRef.current.addEventListener("mouseleave", handleMouseLeave)
-    }
-
-    // Cleanup
-    return () => {
-      window.removeEventListener("resize", updateDefaultPosition)
-      window.removeEventListener("mousemove", handleMouseMove)
-
-      if (heroRef.current) {
-        heroRef.current.removeEventListener("mouseenter", handleMouseEnter)
-        heroRef.current.removeEventListener("mouseleave", handleMouseLeave)
-      }
-    }
-  }, [isMouseInHero]) // Only depend on isMouseInHero
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      if (spotlightRef.current) {
-        const rect = spotlightRef.current.getBoundingClientRect()
-        const x = e.clientX - rect.left
-        const y = e.clientY - rect.top
-
-        spotlightRef.current.style.background = `radial-gradient(600px at ${x}px ${y}px, rgba(29, 78, 216, 0.15), transparent 80%)`
-      }
+      setMousePosition({ x: e.clientX, y: e.clientY })
     }
 
-    const spotlight = spotlightRef.current
-    if (spotlight) {
-      spotlight.addEventListener("mousemove", handleMouseMove)
-      return () => spotlight.removeEventListener("mousemove", handleMouseMove)
-    }
+    window.addEventListener("mousemove", handleMouseMove)
+    return () => window.removeEventListener("mousemove", handleMouseMove)
   }, [])
 
-  if (!isMounted) {
-    return null
-  }
-
   return (
-    <div ref={containerRef} className="absolute inset-0 -z-10 overflow-hidden">
-      {/* Primary spotlight that follows mouse/animation */}
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* Main spotlight following mouse */}
       <motion.div
-        ref={spotlightRef}
-        className="pointer-events-none absolute inset-0 z-0 transition duration-300"
+        className="absolute w-96 h-96 rounded-full opacity-20 dark:opacity-30"
         style={{
-          background: "radial-gradient(600px at 50% 50%, rgba(29, 78, 216, 0.15), transparent 80%)",
+          background:
+            "radial-gradient(circle, rgba(59, 130, 246, 0.4) 0%, rgba(147, 51, 234, 0.2) 50%, transparent 70%)",
+          filter: "blur(40px)",
         }}
-      />
-      <motion.div
-        className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-gradient-to-r from-primary/20 to-purple-500/20 blur-3xl"
         animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.3, 0.6, 0.3],
+          x: mousePosition.x - 192,
+          y: mousePosition.y - 192,
         }}
         transition={{
-          duration: 8,
-          repeat: Number.POSITIVE_INFINITY,
-          ease: "easeInOut",
+          type: "spring",
+          damping: 30,
+          stiffness: 200,
         }}
       />
+
+      {/* Floating orbs */}
       <motion.div
-        className="absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-gradient-to-r from-blue-500/20 to-primary/20 blur-3xl"
+        className="absolute w-32 h-32 rounded-full opacity-40"
+        style={{
+          background: "radial-gradient(circle, rgba(236, 72, 153, 0.3) 0%, transparent 70%)",
+          filter: "blur(20px)",
+        }}
         animate={{
-          scale: [1.2, 1, 1.2],
-          opacity: [0.6, 0.3, 0.6],
+          x: [100, 200, 150, 100],
+          y: [200, 100, 300, 200],
         }}
         transition={{
-          duration: 8,
+          duration: 20,
           repeat: Number.POSITIVE_INFINITY,
-          ease: "easeInOut",
-          delay: 4,
+          ease: "linear",
+        }}
+      />
+
+      <motion.div
+        className="absolute w-24 h-24 rounded-full opacity-30"
+        style={{
+          background: "radial-gradient(circle, rgba(34, 211, 238, 0.4) 0%, transparent 70%)",
+          filter: "blur(15px)",
+        }}
+        animate={{
+          x: [300, 100, 400, 300],
+          y: [100, 400, 200, 100],
+        }}
+        transition={{
+          duration: 25,
+          repeat: Number.POSITIVE_INFINITY,
+          ease: "linear",
         }}
       />
     </div>

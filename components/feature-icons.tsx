@@ -11,6 +11,7 @@ import {
   MessageSquare,
   FileText,
   Cpu,
+  Sparkles,
 } from "lucide-react"
 
 export function BotIcon() {
@@ -18,7 +19,7 @@ export function BotIcon() {
 }
 
 export function SparklesIcon() {
-  return <Zap width="24" height="24" />
+  return <Sparkles width="24" height="24" />
 }
 
 export function DatabaseIcon() {
@@ -58,6 +59,7 @@ export const FeatureIcons = {
   MessageSquare,
   FileText: FileTextIcon,
   Cpu: ServerIcon,
+  Sparkles,
 }
 
 export default FeatureIcons

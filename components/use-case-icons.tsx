@@ -1,4 +1,15 @@
-import { Building2, Briefcase, GraduationCap, Heart, Scale, Truck, Factory, Landmark } from "lucide-react"
+import {
+  Building2,
+  Briefcase,
+  GraduationCap,
+  Heart,
+  Scale,
+  Truck,
+  Factory,
+  Landmark,
+  Globe,
+  TrendingUp,
+} from "lucide-react"
 
 export function BuildingIcon() {
   return (
@@ -141,6 +152,8 @@ export const UseCaseIcons = {
   Truck,
   Factory,
   Landmark,
+  Globe,
+  TrendingUp,
 }
 
 export default UseCaseIcons
