@@ -3,29 +3,31 @@ export default function StructuredData() {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     name: "Enterprise AI Platform",
+    description:
+      "Enterprise-grade AI platform with LLM conversations, customizable agents, secure knowledge base, and MCP server support for businesses and government agencies.",
+    url: "https://your-domain.com",
     applicationCategory: "BusinessApplication",
     operatingSystem: "Web",
     offers: {
       "@type": "Offer",
       price: "0",
       priceCurrency: "USD",
-      availability: "https://schema.org/InStock",
-      priceValidUntil: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split("T")[0],
+      description: "Contact for custom enterprise pricing",
     },
-    description:
-      "Enterprise-grade AI platform with LLM conversations, customizable agents, secure knowledge base, and MCP server support.",
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.8",
-      ratingCount: "127",
+    provider: {
+      "@type": "Organization",
+      name: "AI Enterprise",
+      url: "https://your-domain.com",
     },
     featureList: [
       "Advanced LLM Conversations",
       "Customizable Agents",
       "Enterprise Knowledge Base",
+      "Enterprise Security",
       "Prompt Templates",
       "MCP Server Support",
-      "Enterprise Security",
+      "Data Privacy & Compliance",
+      "Real-time Collaboration",
     ],
   }
 

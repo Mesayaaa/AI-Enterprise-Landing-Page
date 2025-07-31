@@ -107,125 +107,31 @@ export default function FramerSpotlight() {
   }
 
   return (
-    <div ref={containerRef} className="absolute inset-0 overflow-hidden pointer-events-none">
+    <div ref={containerRef} className="absolute inset-0 -z-10 overflow-hidden">
       {/* Primary spotlight that follows mouse/animation */}
       <motion.div
-        className="absolute pointer-events-none"
-        style={{
-          background: `radial-gradient(circle, ${
-            isDark ? spotlightColors[0].darkColor : spotlightColors[0].color
-          } 0%, transparent 70%)`,
-          width: "1000px",
-          height: "1000px",
-          borderRadius: "50%",
-          x: springX,
-          y: springY,
-          translateX: "-50%",
-          translateY: "-50%",
-        }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
-      />
-
-      {/* Secondary spotlights with independent animations */}
-      <motion.div
-        className="absolute pointer-events-none"
-        initial={{ opacity: 0 }}
+        className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-gradient-to-r from-primary/20 to-purple-500/20 blur-3xl"
         animate={{
+          scale: [1, 1.2, 1],
           opacity: [0.3, 0.6, 0.3],
-          x: ["0%", "10%", "5%", "0%"],
-          y: ["0%", "5%", "10%", "0%"],
         }}
         transition={{
-          duration: 15,
+          duration: 8,
           repeat: Number.POSITIVE_INFINITY,
-          repeatType: "reverse",
-        }}
-        style={{
-          background: `radial-gradient(circle, ${
-            isDark ? spotlightColors[1].darkColor : spotlightColors[1].color
-          } 0%, transparent 70%)`,
-          width: "800px",
-          height: "800px",
-          borderRadius: "50%",
-          left: "20%",
-          top: "30%",
+          ease: "easeInOut",
         }}
       />
-
       <motion.div
-        className="absolute pointer-events-none"
-        initial={{ opacity: 0 }}
+        className="absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-gradient-to-r from-blue-500/20 to-primary/20 blur-3xl"
         animate={{
-          opacity: [0.2, 0.5, 0.2],
-          x: ["0%", "-10%", "-5%", "0%"],
-          y: ["0%", "-5%", "-10%", "0%"],
+          scale: [1.2, 1, 1.2],
+          opacity: [0.6, 0.3, 0.6],
         }}
         transition={{
-          duration: 18,
+          duration: 8,
           repeat: Number.POSITIVE_INFINITY,
-          repeatType: "reverse",
-        }}
-        style={{
-          background: `radial-gradient(circle, ${
-            isDark ? spotlightColors[2].darkColor : spotlightColors[2].color
-          } 0%, transparent 70%)`,
-          width: "700px",
-          height: "700px",
-          borderRadius: "50%",
-          right: "20%",
-          bottom: "30%",
-        }}
-      />
-
-      {/* Additional colored spotlights */}
-      <motion.div
-        className="absolute pointer-events-none"
-        initial={{ opacity: 0 }}
-        animate={{
-          opacity: [0.2, 0.4, 0.2],
-          scale: [1, 1.05, 1],
-        }}
-        transition={{
-          duration: 12,
-          repeat: Number.POSITIVE_INFINITY,
-          repeatType: "reverse",
-        }}
-        style={{
-          background: `radial-gradient(circle, ${
-            isDark ? "rgba(168, 85, 247, 0.2)" : "rgba(168, 85, 247, 0.15)"
-          } 0%, transparent 70%)`,
-          width: "600px",
-          height: "600px",
-          borderRadius: "50%",
-          left: "60%",
-          top: "20%",
-        }}
-      />
-
-      <motion.div
-        className="absolute pointer-events-none"
-        initial={{ opacity: 0 }}
-        animate={{
-          opacity: [0.15, 0.3, 0.15],
-          scale: [1, 1.1, 1],
-        }}
-        transition={{
-          duration: 20,
-          repeat: Number.POSITIVE_INFINITY,
-          repeatType: "reverse",
-          delay: 2,
-        }}
-        style={{
-          background: `radial-gradient(circle, ${
-            isDark ? "rgba(251, 191, 36, 0.2)" : "rgba(251, 191, 36, 0.15)"
-          } 0%, transparent 70%)`,
-          width: "550px",
-          height: "550px",
-          borderRadius: "50%",
-          left: "30%",
-          bottom: "15%",
+          ease: "easeInOut",
+          delay: 4,
         }}
       />
     </div>
