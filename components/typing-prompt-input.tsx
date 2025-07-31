@@ -1,16 +1,16 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Search } from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { Send } from "lucide-react"
 
 const prompts = [
-  "How can I improve our customer support with AI?",
-  "What are the security features for enterprise data?",
-  "How do I integrate with our existing knowledge base?",
-  "Can you help me analyze our quarterly reports?",
-  "What compliance standards do you support?",
+  "Analyze our quarterly financial reports...",
+  "Generate a compliance summary for...",
+  "Create a risk assessment for...",
+  "Draft a policy document about...",
+  "Summarize the latest market trends...",
 ]
 
 export default function TypingPromptInput() {
@@ -18,55 +18,45 @@ export default function TypingPromptInput() {
   const [promptIndex, setPromptIndex] = useState(0)
   const [charIndex, setCharIndex] = useState(0)
   const [isDeleting, setIsDeleting] = useState(false)
-  const [isPaused, setIsPaused] = useState(false)
 
   useEffect(() => {
     const timeout = setTimeout(
       () => {
-        if (isPaused) {
-          setIsPaused(false)
-          setIsDeleting(true)
-          return
-        }
+        const current = prompts[promptIndex]
 
-        if (isDeleting) {
-          if (charIndex > 0) {
-            setCurrentPrompt(prompts[promptIndex].substring(0, charIndex - 1))
-            setCharIndex(charIndex - 1)
-          } else {
-            setIsDeleting(false)
-            setPromptIndex((promptIndex + 1) % prompts.length)
-          }
-        } else {
-          if (charIndex < prompts[promptIndex].length) {
-            setCurrentPrompt(prompts[promptIndex].substring(0, charIndex + 1))
-            setCharIndex(charIndex + 1)
-          } else {
-            setIsPaused(true)
-          }
+        if (!isDeleting && charIndex < current.length) {
+          setCurrentPrompt(current.substring(0, charIndex + 1))
+          setCharIndex(charIndex + 1)
+        } else if (isDeleting && charIndex > 0) {
+          setCurrentPrompt(current.substring(0, charIndex - 1))
+          setCharIndex(charIndex - 1)
+        } else if (!isDeleting && charIndex === current.length) {
+          setTimeout(() => setIsDeleting(true), 2000)
+        } else if (isDeleting && charIndex === 0) {
+          setIsDeleting(false)
+          setPromptIndex((promptIndex + 1) % prompts.length)
         }
       },
-      isDeleting ? 50 : isPaused ? 2000 : 100,
+      isDeleting ? 50 : 100,
     )
 
     return () => clearTimeout(timeout)
-  }, [charIndex, isDeleting, isPaused, promptIndex])
+  }, [charIndex, isDeleting, promptIndex])
 
   return (
     <div className="w-full max-w-2xl mx-auto">
-      <div className="relative">
+      <div className="relative flex items-center space-x-2 rounded-xl border bg-background/50 backdrop-blur-sm p-2 shadow-lg">
         <Input
-          type="text"
-          placeholder={currentPrompt + (charIndex === prompts[promptIndex].length && !isPaused ? "" : "|")}
-          className="w-full h-14 pl-6 pr-14 text-lg bg-background/80 backdrop-blur-sm border-2 border-muted-foreground/20 focus:border-primary rounded-xl shadow-lg"
+          placeholder={currentPrompt}
+          className="flex-1 border-0 bg-transparent text-lg placeholder:text-muted-foreground focus-visible:ring-0"
           readOnly
         />
-        <Button size="icon" className="absolute right-2 top-2 h-10 w-10 rounded-lg bg-primary hover:bg-primary/90">
-          <Search className="h-4 w-4" />
+        <Button size="icon" className="shrink-0 rounded-lg">
+          <Send className="h-4 w-4" />
         </Button>
       </div>
-      <p className="text-sm text-muted-foreground mt-3 text-center">
-        Try asking about our enterprise features, security, or integration capabilities
+      <p className="mt-2 text-center text-sm text-muted-foreground">
+        Try our AI assistant with enterprise-grade security
       </p>
     </div>
   )

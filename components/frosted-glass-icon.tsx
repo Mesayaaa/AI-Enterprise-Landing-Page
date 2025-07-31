@@ -1,31 +1,17 @@
-"use client"
-
-import type React from "react"
-
-import { motion } from "framer-motion"
-import { cn } from "@/lib/utils"
+import type { ReactNode } from "react"
 
 interface FrostedGlassIconProps {
-  icon: React.ReactNode
-  color: string
+  children: ReactNode
   className?: string
 }
 
-export default function FrostedGlassIcon({ icon, color, className }: FrostedGlassIconProps) {
+export default function FrostedGlassIcon({ children, className = "" }: FrostedGlassIconProps) {
   return (
-    <motion.div
-      className={cn(
-        "relative h-16 w-16 rounded-2xl backdrop-blur-sm border border-white/20 dark:border-gray-700/50 flex items-center justify-center overflow-hidden",
-        className,
-      )}
-      style={{
-        background: `linear-gradient(135deg, ${color}20, ${color}10)`,
-      }}
-      whileHover={{ scale: 1.05 }}
-      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+    <div
+      className={`relative overflow-hidden rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 dark:bg-gray-800/10 dark:border-gray-700/20 ${className}`}
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
-      <div className="relative z-10 text-2xl">{icon}</div>
-    </motion.div>
+      <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent" />
+      <div className="relative z-10 p-4">{children}</div>
+    </div>
   )
 }

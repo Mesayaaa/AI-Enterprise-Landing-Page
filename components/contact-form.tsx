@@ -6,49 +6,46 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
-import { CheckCircle2 } from "lucide-react"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Loader2, Send } from "lucide-react"
 
 export default function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [submitted, setSubmitted] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
 
     // Simulate form submission
-    setTimeout(() => {
-      setIsSubmitting(false)
-      setIsSubmitted(true)
-    }, 1500)
+    await new Promise((resolve) => setTimeout(resolve, 2000))
+
+    setIsSubmitting(false)
+    setSubmitted(true)
   }
 
-  if (isSubmitted) {
+  if (submitted) {
     return (
-      <Card>
-        <CardContent className="pt-6 flex flex-col items-center justify-center min-h-[400px] text-center">
-          <CheckCircle2 className="h-16 w-16 text-primary mb-4" />
-          <h3 className="text-2xl font-bold mb-2">Thank You!</h3>
-          <p className="text-muted-foreground mb-6">
-            Your inquiry has been received. Our enterprise team will contact you shortly to discuss your specific
-            requirements.
+      <Card className="w-full max-w-md mx-auto">
+        <CardContent className="p-6 text-center">
+          <div className="mb-4 mx-auto w-12 h-12 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
+            <Send className="h-6 w-6 text-green-600 dark:text-green-400" />
+          </div>
+          <h3 className="text-lg font-semibold mb-2">Thank You!</h3>
+          <p className="text-muted-foreground">
+            We've received your request and will contact you within 24 hours to discuss your enterprise AI needs.
           </p>
-          <Button onClick={() => setIsSubmitted(false)}>Submit Another Inquiry</Button>
         </CardContent>
       </Card>
     )
   }
 
   return (
-    <Card>
+    <Card className="w-full max-w-md mx-auto">
       <CardHeader>
-        <CardTitle>Contact Our Enterprise Team</CardTitle>
-        <CardDescription>
-          Fill out the form below to discuss your organization's needs and receive a custom quote.
-        </CardDescription>
+        <CardTitle>Request Enterprise Demo</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -62,44 +59,72 @@ export default function ContactForm() {
               <Input id="lastName" placeholder="Doe" required />
             </div>
           </div>
+
           <div className="space-y-2">
             <Label htmlFor="email">Work Email</Label>
-            <Input id="email" type="email" placeholder="john.doe@company.com" required />
+            <Input id="email" type="email" placeholder="john@company.com" required />
           </div>
+
           <div className="space-y-2">
-            <Label htmlFor="company">Company/Organization</Label>
-            <Input id="company" placeholder="Acme Inc." required />
+            <Label htmlFor="company">Company</Label>
+            <Input id="company" placeholder="Your Company" required />
           </div>
+
           <div className="space-y-2">
             <Label htmlFor="role">Your Role</Label>
-            <Input id="role" placeholder="CTO, IT Director, etc." required />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="size">Organization Size</Label>
-            <Select>
-              <SelectTrigger id="size">
-                <SelectValue placeholder="Select organization size" />
+            <Select required>
+              <SelectTrigger>
+                <SelectValue placeholder="Select your role" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="1-50">1-50 employees</SelectItem>
-                <SelectItem value="51-200">51-200 employees</SelectItem>
-                <SelectItem value="201-500">201-500 employees</SelectItem>
-                <SelectItem value="501-1000">501-1000 employees</SelectItem>
-                <SelectItem value="1001+">1001+ employees</SelectItem>
-                <SelectItem value="government">Government Agency</SelectItem>
+                <SelectItem value="cto">CTO</SelectItem>
+                <SelectItem value="cio">CIO</SelectItem>
+                <SelectItem value="it-director">IT Director</SelectItem>
+                <SelectItem value="data-scientist">Data Scientist</SelectItem>
+                <SelectItem value="product-manager">Product Manager</SelectItem>
+                <SelectItem value="other">Other</SelectItem>
               </SelectContent>
             </Select>
           </div>
+
           <div className="space-y-2">
-            <Label htmlFor="message">How can we help?</Label>
-            <Textarea id="message" placeholder="Tell us about your specific requirements and use cases..." rows={4} />
+            <Label htmlFor="companySize">Company Size</Label>
+            <Select required>
+              <SelectTrigger>
+                <SelectValue placeholder="Select company size" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="50-200">50-200 employees</SelectItem>
+                <SelectItem value="200-1000">200-1,000 employees</SelectItem>
+                <SelectItem value="1000-5000">1,000-5,000 employees</SelectItem>
+                <SelectItem value="5000+">5,000+ employees</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="useCase">Primary Use Case</Label>
+            <Textarea
+              id="useCase"
+              placeholder="Tell us about your AI use case and requirements..."
+              className="min-h-[80px]"
+              required
+            />
+          </div>
+
           <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? "Submitting..." : "Request Information"}
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Submitting...
+              </>
+            ) : (
+              <>
+                <Send className="mr-2 h-4 w-4" />
+                Request Demo
+              </>
+            )}
           </Button>
-          <p className="text-xs text-muted-foreground text-center">
-            By submitting this form, you agree to our privacy policy and terms of service.
-          </p>
         </form>
       </CardContent>
     </Card>

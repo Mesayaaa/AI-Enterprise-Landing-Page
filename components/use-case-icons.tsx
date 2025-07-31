@@ -1,3 +1,5 @@
+import { Building2, Briefcase, GraduationCap, Heart, Scale, Truck, Factory, Landmark } from "lucide-react"
+
 export function BuildingIcon() {
   return (
     <svg
@@ -129,3 +131,16 @@ export function EducationIcon() {
     </svg>
   )
 }
+
+export const UseCaseIcons = {
+  Building2,
+  Briefcase,
+  GraduationCap,
+  Heart,
+  Scale,
+  Truck,
+  Factory,
+  Landmark,
+}
+
+export default UseCaseIcons

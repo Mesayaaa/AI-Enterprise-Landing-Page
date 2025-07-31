@@ -5,14 +5,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     {
       url: "https://your-domain.com",
       lastModified: new Date(),
-      changeFrequency: "yearly",
+      changeFrequency: "monthly",
       priority: 1,
     },
     {
       url: "https://your-domain.com/privacy",
       lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
+      changeFrequency: "yearly",
+      priority: 0.5,
     },
   ]
 }

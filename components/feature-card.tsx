@@ -1,30 +1,30 @@
 "use client"
 
-import type React from "react"
-
-import { motion } from "framer-motion"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import FrostedGlassIcon from "@/components/frosted-glass-icon"
+import type { ReactNode } from "react"
+import { Card, CardContent } from "@/components/ui/card"
 
 interface FeatureCardProps {
-  icon: React.ReactNode
+  icon: ReactNode
   title: string
   description: string
-  accentColor: string
+  className?: string
 }
 
-export default function FeatureCard({ icon, title, description, accentColor }: FeatureCardProps) {
+export default function FeatureCard({ icon, title, description, className = "" }: FeatureCardProps) {
   return (
-    <motion.div whileHover={{ y: -5 }} transition={{ type: "spring", stiffness: 300, damping: 20 }}>
-      <Card className="h-full bg-background/60 backdrop-blur-sm border transition-all duration-300 hover:shadow-lg dark:bg-background/80 hover:border-primary/20">
-        <CardHeader className="pb-2">
-          <FrostedGlassIcon icon={icon} color={accentColor} className="mb-4" />
-          <CardTitle className="text-lg">{title}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <CardDescription className="text-sm leading-relaxed">{description}</CardDescription>
-        </CardContent>
-      </Card>
-    </motion.div>
+    <Card
+      className={`group relative overflow-hidden border-0 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 ${className}`}
+    >
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      <CardContent className="relative p-6">
+        <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary group-hover:bg-primary/20 transition-colors duration-300">
+          {icon}
+        </div>
+        <h3 className="mb-2 text-xl font-semibold text-gray-900 dark:text-white group-hover:text-primary transition-colors duration-300">
+          {title}
+        </h3>
+        <p className="text-gray-600 dark:text-gray-300 leading-relaxed">{description}</p>
+      </CardContent>
+    </Card>
   )
 }

@@ -16,18 +16,16 @@ export default function StructuredData() {
     },
     provider: {
       "@type": "Organization",
-      name: "AI Enterprise",
+      name: "Enterprise AI Platform",
       url: "https://your-domain.com",
     },
     featureList: [
-      "Advanced LLM Conversations",
-      "Customizable Agents",
-      "Enterprise Knowledge Base",
-      "Enterprise Security",
-      "Prompt Templates",
+      "Secure AI Conversations",
+      "Customizable AI Agents",
+      "Knowledge Base Management",
       "MCP Server Support",
-      "Data Privacy & Compliance",
-      "Real-time Collaboration",
+      "Enterprise Security",
+      "Role-based Access Control",
     ],
   }
 

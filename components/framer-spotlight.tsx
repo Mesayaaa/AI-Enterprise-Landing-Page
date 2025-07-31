@@ -10,6 +10,7 @@ export default function FramerSpotlight() {
   const containerRef = useRef<HTMLDivElement>(null)
   const heroRef = useRef<HTMLElement | null>(null)
   const defaultPositionRef = useRef({ x: 0, y: 0 })
+  const spotlightRef = useRef<HTMLDivElement>(null)
   const { resolvedTheme } = useTheme()
   const isDark = resolvedTheme === "dark"
 
@@ -102,6 +103,24 @@ export default function FramerSpotlight() {
     }
   }, [isMouseInHero]) // Only depend on isMouseInHero
 
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (spotlightRef.current) {
+        const rect = spotlightRef.current.getBoundingClientRect()
+        const x = e.clientX - rect.left
+        const y = e.clientY - rect.top
+
+        spotlightRef.current.style.background = `radial-gradient(600px at ${x}px ${y}px, rgba(29, 78, 216, 0.15), transparent 80%)`
+      }
+    }
+
+    const spotlight = spotlightRef.current
+    if (spotlight) {
+      spotlight.addEventListener("mousemove", handleMouseMove)
+      return () => spotlight.removeEventListener("mousemove", handleMouseMove)
+    }
+  }, [])
+
   if (!isMounted) {
     return null
   }
@@ -109,6 +128,13 @@ export default function FramerSpotlight() {
   return (
     <div ref={containerRef} className="absolute inset-0 -z-10 overflow-hidden">
       {/* Primary spotlight that follows mouse/animation */}
+      <motion.div
+        ref={spotlightRef}
+        className="pointer-events-none absolute inset-0 z-0 transition duration-300"
+        style={{
+          background: "radial-gradient(600px at 50% 50%, rgba(29, 78, 216, 0.15), transparent 80%)",
+        }}
+      />
       <motion.div
         className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-gradient-to-r from-primary/20 to-purple-500/20 blur-3xl"
         animate={{
